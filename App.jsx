@@ -1,7 +1,4 @@
 import React, { useState, useMemo } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import * as XLSX from "xlsx";
 
 export default function App() {
@@ -43,57 +40,36 @@ export default function App() {
   const uniqueMachines = [...new Set(data.map((d) => d["Machine Type"]))];
 
   return (
-    <div className="p-6 grid gap-6">
-      <h1 className="text-3xl font-bold">Inspection Web App</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Inspection Web App</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <p className="font-semibold mb-1">Upload Excel</p>
-          <Input type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
-        </div>
+      <input type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
 
-        <div>
-          <p className="font-semibold mb-1">Filter by Device</p>
-          <Select onValueChange={setDeviceFilter}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Device" />
-            </SelectTrigger>
-            <SelectContent>
-              {uniqueDevices.map((d) => (
-                <SelectItem key={d} value={d}>{d}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="grid gap-2 mt-4">
+        <select onChange={(e) => setDeviceFilter(e.target.value)}>
+          <option value="">Select Device</option>
+          {uniqueDevices.map((d) => (
+            <option key={d} value={d}>{d}</option>
+          ))}
+        </select>
 
-        <div>
-          <p className="font-semibold mb-1">Filter by Machine Type</p>
-          <Select onValueChange={setMachineFilter}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Machine Type" />
-            </SelectTrigger>
-            <SelectContent>
-              {uniqueMachines.map((m) => (
-                <SelectItem key={m} value={m}>{m}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <select onChange={(e) => setMachineFilter(e.target.value)}>
+          <option value="">Select Machine Type</option>
+          {uniqueMachines.map((m) => (
+            <option key={m} value={m}>{m}</option>
+          ))}
+        </select>
       </div>
 
-      <div className="grid gap-4">
+      <div className="mt-6">
         {filteredData.map((row, idx) => (
-          <Card key={idx} className="shadow-md rounded-2xl">
-            <CardContent className="p-4">
-              <p><b>Device:</b> {row.Device}</p>
-              <p><b>Machine Type:</b> {row["Machine Type"]}</p>
-              <p><b>AICone Frequency:</b> {row.AICone}</p>
-              <p><b>Qpro Frequency:</b> {row.Qpro}</p>
-              <p className="mt-2 text-lg font-semibold">
-                Frequency Difference: {computeFrequencyDiff(row)}
-              </p>
-            </CardContent>
-          </Card>
+          <div key={idx} className="border p-3 rounded mb-2">
+            <p><b>Device:</b> {row.Device}</p>
+            <p><b>Machine Type:</b> {row["Machine Type"]}</p>
+            <p><b>AICone Frequency:</b> {row.AICone}</p>
+            <p><b>Qpro Frequency:</b> {row.Qpro}</p>
+            <p><b>Difference:</b> {computeFrequencyDiff(row)}</p>
+          </div>
         ))}
       </div>
     </div>
